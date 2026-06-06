@@ -4,125 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MATRIX // QUANTUM INTEGRATED SYSTEM</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
 
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: radial-gradient(circle, #09121a 0%, #020508 100%);
-            color: #c4d7e6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .container {
-            background: rgba(10, 25, 30, 0.85);
-            border: 2px solid #00ff88;
-            border-radius: 4px;
-            padding: 30px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.25);
-            backdrop-filter: blur(8px);
-            position: relative;
-            text-align: center;
-        }
-
-        h2 {
-            font-family: 'Orbitron', sans-serif;
-            margin: 0;
-            color: #00ff88;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
-        }
-
-        .subtitle {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #618b9c;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(97, 139, 156, 0.3);
-            padding-bottom: 10px;
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            margin: 12px 0 4px;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 14px;
-            color: #00ff88;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #1a3a3a;
-            background: rgba(5, 15, 20, 0.8);
-            color: #ffffff;
-            box-sizing: border-box;
-            font-size: 15px;
-            font-family: 'Rajdhani', sans-serif;
-            margin-bottom: 10px;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            color: #00ff88;
-            border: 2px solid #00ff88;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 2px;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-top: 15px;
-            transition: all 0.3s;
-        }
-
-        button:hover {
-            background: #00ff88;
-            color: #020508;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
-        }
-
-        #qr-container, #admin-view { display: none; }
+        body { font-family: 'Rajdhani', sans-serif; background: radial-gradient(circle, #09121a 0%, #020508 100%); color: #c4d7e6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background: rgba(10, 25, 30, 0.85); border: 2px solid #00ff88; border-radius: 4px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 0 25px rgba(0, 255, 136, 0.25); backdrop-filter: blur(8px); position: relative; text-align: center; }
+        h2 { font-family: 'Orbitron', sans-serif; margin: 0; color: #00ff88; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 255, 136, 0.6); }
+        .subtitle { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: #618b9c; margin-bottom: 20px; border-bottom: 1px solid rgba(97, 139, 156, 0.3); padding-bottom: 10px; }
+        label { display: block; text-align: left; margin: 12px 0 4px; font-weight: 700; text-transform: uppercase; font-size: 14px; color: #00ff88; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #1a3a3a; background: rgba(5, 15, 20, 0.8); color: #ffffff; box-sizing: border-box; font-size: 15px; font-family: 'Rajdhani', sans-serif; margin-bottom: 10px; }
+        button { width: 100%; padding: 14px; background: transparent; color: #00ff88; border: 2px solid #00ff88; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; margin-top: 15px; transition: all 0.3s; }
+        button:hover { background: #00ff88; color: #020508; box-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
         
-        #qrcode { display: flex; justify-content: center; margin: 15px 0; }
-        #qrcode img { border: 6px solid white; }
-
-        #reader {
-            width: 100%;
-            background: #000;
-            border: 1px solid #1a3a3a;
-            margin-top: 15px;
-        }
-
+        #admin-view, #pin-container, #order-details { display: none; }
         #status { margin-top: 15px; font-family: 'Orbitron', sans-serif; font-size: 13px; }
         .success { color: #00ff88; }
         .error { color: #ff3333; }
-        
-        .admin-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #1a3a3a;
-            cursor: pointer;
-            font-size: 12px;
-        }
+        .admin-toggle { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #1a3a3a; cursor: pointer; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -136,40 +34,37 @@
         
         <form id="purchaseForm">
             <label>// REAL NAME</label>
-            <input type="text" id="realName" placeholder="First & Last Name..." required>
-
+            <input type="text" id="realName" required>
             <label>// SCHOOL NICKNAME</label>
-            <input type="text" id="nickname" placeholder="What people call you..." required>
-
+            <input type="text" id="nickname" required>
             <label>// ROBLOX USERNAME</label>
-            <input type="text" id="username" placeholder="Exact spelling..." required>
-
+            <input type="text" id="username" required>
             <label>// SELECTED GEAR</label>
             <select id="item">
-                <option value="Vest Police">[MK-1] TACTICAL POLICE VEST</option>
-                <option value="6 gold chain guns">[HEAVY] 6X GOLD CHAIN GUNS</option>
-                <option value="HyperlaserGun">[ENERGY] HYPERLASER BLASTER</option>
-                <option value="Super Protective Riot Shield">[DEFENSE] ENERGY RIOT SHIELD</option>
+                <option value="Vest Police">TACTICAL POLICE VEST</option>
+                <option value="6 gold chain guns">6X GOLD CHAIN GUNS</option>
+                <option value="HyperlaserGun">HYPERLASER BLASTER</option>
+                <option value="Energy Riot Shield">ENERGY RIOT SHIELD</option>
             </select>
-
-            <button type="submit">Generate Passcode Matrix</button>
+            <button type="submit">Generate Security PIN</button>
         </form>
 
-        <div id="qr-container">
-            <h3 style="font-family: 'Orbitron'; color: #00ff88; margin-top: 20px;">SECURE PASS GENERATED</h3>
-            <p style="font-size: 14px; color: #a2bccc;">Show this square code to the Admin to finalize purchase.</p>
-            <div id="qrcode"></div>
+        <div id="pin-container">
+            <h3 style="font-family: 'Orbitron'; color: #00ff88; margin-top: 20px;">ACCESS PIN GENERATED</h3>
+            <div id="pin-display" style="font-size: 48px; color: #fff; margin: 10px 0; letter-spacing: 15px;">0000</div>
+            <p style="font-size: 14px; color: #a2bccc;">Present this PIN to the Admin terminal.</p>
         </div>
     </div>
 
     <div id="admin-view">
         <h2>ADMIN TERMINAL</h2>
-        <div class="subtitle">Live Payment Authorization Scan</div>
+        <div class="subtitle">Manual PIN Authorization</div>
         
-        <button id="start-cam-btn" onclick="startScanning()">Initialize Camera Lens</button>
-        <div id="reader"></div>
+        <label>// ENTER CUSTOMER PIN</label>
+        <input type="password" id="pin-input" placeholder="0000" maxlength="4">
+        <button onclick="verifyPin()">Validate & Deploy</button>
 
-        <div id="order-details" style="display:none; text-align: left; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-left: 3px solid #00ff88;">
+        <div id="order-details" style="text-align: left; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-left: 3px solid #00ff88;">
             <p><strong>👤 Name:</strong> <span id="display-name"></span></p>
             <p><strong>🎮 Roblox:</strong> <span id="display-user"></span></p>
             <p><strong>⚔️ Item:</strong> <span id="display-item"></span></p>
@@ -183,103 +78,50 @@
 </div>
 
 <script>
-    // 🔗 PASTE YOUR SAME GOOGLE WEB APP URL HERE INSIDE THE QUOTES
-    const GOOGLE_WEB_URL = "https://script.google.com/macros/s/AKfycbzNFit4aYP8HnW2Cj3VIoUEHf49LIXsovugJ0gEDhb70XDm-cgcbSGCmPy1YwlpQ10/exec";
-    
-    // 🔒 SET YOUR SECRET ADMIN PASSWORD HERE
-    const ADMIN_PASSWORD = "1234"; 
+    const ADMIN_PASSWORD = "1234";
+    let activeOrder = {};
 
-    let html5QrcodeScanner;
-    let scUser = "", scItem = "";
-
-    // CUSTOMER FORM: QR Generator
     document.getElementById('purchaseForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const rName = document.getElementById('realName').value.trim();
-        const nName = document.getElementById('nickname').value.trim();
-        const uName = document.getElementById('username').value.trim();
-        const itemVal = document.getElementById('item').value;
+        const pin = Math.floor(1000 + Math.random() * 9000).toString();
         
-        document.getElementById('qrcode').innerHTML = "";
-        const ticketData = `${rName}|${nName}|${uName}|${itemVal}`;
+        activeOrder = {
+            rName: document.getElementById('realName').value,
+            nName: document.getElementById('nickname').value,
+            uName: document.getElementById('username').value,
+            item: document.getElementById('item').value,
+            pin: pin
+        };
 
-        new QRCode(document.getElementById('qrcode'), {
-            text: ticketData, width: 160, height: 160,
-            colorDark : "#000000", colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-
-        document.getElementById('qr-container').style.display = "block";
+        document.getElementById('pin-display').innerText = pin;
+        document.getElementById('pin-container').style.display = "block";
         document.getElementById('status').className = "success";
-        document.getElementById('status').innerText = ">> ENCRYPTED BARCODE DEPLOYED.";
+        document.getElementById('status').innerText = ">> SECURITY PIN DEPLOYED.";
     });
 
-    // ADMIN PRIVILEGE LOGIC
     function triggerAdminMode() {
-        let val = prompt("ENTER SYSTEM OVERRIDE SECURITY CLEARANCE CODE:");
-        if (val === ADMIN_PASSWORD) {
+        if (prompt("ENTER SYSTEM OVERRIDE:") === ADMIN_PASSWORD) {
             document.getElementById('customer-view').style.display = "none";
             document.getElementById('admin-view').style.display = "block";
-            document.getElementById('status').innerText = "";
+        }
+    }
+
+    function verifyPin() {
+        const inputPin = document.getElementById('pin-input').value;
+        if (inputPin === activeOrder.pin) {
+            document.getElementById('display-name').innerText = `${activeOrder.nName} (${activeOrder.rName})`;
+            document.getElementById('display-user').innerText = activeOrder.uName;
+            document.getElementById('display-item').innerText = activeOrder.item;
+            document.getElementById('order-details').style.display = "block";
         } else {
-            alert("ACCESS DENIED. INTRUDER ALERT.");
+            alert("Invalid PIN.");
         }
     }
 
     function exitAdminMode() {
-        if(html5QrcodeScanner) { html5QrcodeScanner.clear(); }
         document.getElementById('admin-view').style.display = "none";
-        document.getElementById('order-details').style.display = "none";
         document.getElementById('customer-view').style.display = "block";
-        document.getElementById('status').innerText = "";
     }
-
-    // PHONE CAMERA SCANNER MODULE
-    function startScanning() {
-        document.getElementById('start-cam-btn').style.display = "none";
-        
-        html5QrcodeScanner = new Html5Qrcode("reader");
-        html5QrcodeScanner.start(
-            { facingMode: "environment" }, // Forces back camera on phones
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            (decodedText) => {
-                // When camera successfully reads a QR code string
-                html5QrcodeScanner.stop();
-                document.getElementById('start-cam-btn').style.display = "block";
-                
-                const parts = decodedText.split("|");
-                if(parts.length >= 4) {
-                    document.getElementById('display-name').innerText = `${parts[1]} (${parts[0]})`;
-                    scUser = parts[2];
-                    scItem = parts[3];
-                    document.getElementById('display-user').innerText = scUser;
-                    document.getElementById('display-item').innerText = scItem;
-                    document.getElementById('order-details').style.display = "block";
-                }
-            },
-            (errorMessage) => { /* Silently check frames */ }
-        ).catch(err => { alert("Camera system error or permission denied."); });
-    }
-
-    // SEND APPROVAL TO GOOGLE SHEET LIVE
-    document.getElementById('approve-btn').addEventListener('click', async function() {
-        const statusDiv = document.getElementById('status');
-        statusDiv.className = '';
-        statusDiv.innerText = "UPLINKING REGISTRATION TO DATABASE...";
-
-        const requestUrl = `${GOOGLE_WEB_URL}?action=paid&username=${encodeURIComponent(scUser)}&item=${encodeURIComponent(scItem)}`;
-
-        try {
-            await fetch(requestUrl, { method: 'GET', mode: 'no-cors' });
-            statusDiv.className = 'success';
-            statusDiv.innerText = `>> SUCCESS! ${scUser.toUpperCase()} AUTHORIZED IN DATABASE.`;
-            document.getElementById('order-details').style.display = "none";
-        } catch (error) {
-            statusDiv.className = 'error';
-            statusDiv.innerText = ">> PACKET ERROR. DATABASE TIMEOUT.";
-        }
-    });
 </script>
-
 </body>
 </html>
