@@ -9,10 +9,13 @@
 
         body { font-family: 'Rajdhani', sans-serif; background: radial-gradient(circle, #09121a 0%, #020508 100%); color: #c4d7e6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .container { background: rgba(10, 25, 30, 0.85); border: 2px solid #00ff88; border-radius: 4px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 0 25px rgba(0, 255, 136, 0.25); backdrop-filter: blur(8px); position: relative; text-align: center; }
+        
         h2 { font-family: 'Orbitron', sans-serif; margin: 0; color: #00ff88; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 255, 136, 0.6); }
         .subtitle { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: #618b9c; margin-bottom: 20px; border-bottom: 1px solid rgba(97, 139, 156, 0.3); padding-bottom: 10px; }
+        
         label { display: block; text-align: left; margin: 12px 0 4px; font-weight: 700; text-transform: uppercase; font-size: 14px; color: #00ff88; }
         input, select { width: 100%; padding: 10px; border: 1px solid #1a3a3a; background: rgba(5, 15, 20, 0.8); color: #ffffff; box-sizing: border-box; font-size: 15px; font-family: 'Rajdhani', sans-serif; margin-bottom: 10px; }
+        
         button { width: 100%; padding: 14px; background: transparent; color: #00ff88; border: 2px solid #00ff88; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; margin-top: 15px; transition: all 0.3s; }
         button:hover { background: #00ff88; color: #020508; box-shadow: 0 0 15px rgba(0, 255, 136, 0.6); }
         
@@ -34,17 +37,20 @@
         
         <form id="purchaseForm">
             <label>// REAL NAME</label>
-            <input type="text" id="realName" required>
+            <input type="text" id="realName" placeholder="First & Last Name..." required>
+            
             <label>// SCHOOL NICKNAME</label>
-            <input type="text" id="nickname" required>
+            <input type="text" id="nickname" placeholder="What people call you..." required>
+            
             <label>// ROBLOX USERNAME</label>
-            <input type="text" id="username" required>
+            <input type="text" id="username" placeholder="Exact spelling..." required>
+            
             <label>// SELECTED GEAR</label>
             <select id="item">
                 <option value="Vest Police">TACTICAL POLICE VEST</option>
                 <option value="6 gold chain guns">6X GOLD CHAIN GUNS</option>
                 <option value="HyperlaserGun">HYPERLASER BLASTER</option>
-                <option value="Energy Riot Shield">ENERGY RIOT SHIELD</option>
+                <option value="Riot Shield">RIOT SHIELD</option>
             </select>
             <button type="submit">Generate Security PIN</button>
         </form>
@@ -66,6 +72,7 @@
 
         <div id="order-details" style="text-align: left; margin-top: 20px; background: rgba(255,255,255,0.05); padding: 15px; border-left: 3px solid #00ff88;">
             <p><strong>👤 Name:</strong> <span id="display-name"></span></p>
+            <p><strong>🎭 Nickname:</strong> <span id="display-nickname"></span></p>
             <p><strong>🎮 Roblox:</strong> <span id="display-user"></span></p>
             <p><strong>⚔️ Item:</strong> <span id="display-item"></span></p>
             <button id="approve-btn" style="background:#00ff88; color:#000;">MARK PAID & DEPLOY</button>
@@ -78,27 +85,35 @@
 </div>
 
 <script>
+    const GOOGLE_WEB_URL = "https://script.google.com/macros/s/AKfycbzhm8PrRSgIAZgveKSN9LetLLHl0aOHpgky-CE96qvN62G1Ioah00J5mOa8ADPSJZTT/exec";
     const ADMIN_PASSWORD = "1234";
-    let activeOrder = {};
 
-    document.getElementById('purchaseForm').addEventListener('submit', function(e) {
+    // CUSTOMER: Save order to Google Sheet
+    document.getElementById('purchaseForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const pin = Math.floor(1000 + Math.random() * 9000).toString();
+        const statusDiv = document.getElementById('status');
+        statusDiv.innerText = ">> UPLINKING TO DATABASE...";
         
-        activeOrder = {
-            rName: document.getElementById('realName').value,
-            nName: document.getElementById('nickname').value,
-            uName: document.getElementById('username').value,
-            item: document.getElementById('item').value,
-            pin: pin
-        };
-
-        document.getElementById('pin-display').innerText = pin;
-        document.getElementById('pin-container').style.display = "block";
-        document.getElementById('status').className = "success";
-        document.getElementById('status').innerText = ">> SECURITY PIN DEPLOYED.";
+        const rName = document.getElementById('realName').value;
+        const nName = document.getElementById('nickname').value;
+        const uName = document.getElementById('username').value;
+        const item = document.getElementById('item').value;
+        
+        const url = `${GOOGLE_WEB_URL}?action=saveOrder&rName=${encodeURIComponent(rName)}&nName=${encodeURIComponent(nName)}&uName=${encodeURIComponent(uName)}&item=${encodeURIComponent(item)}`;
+        
+        try {
+            const pin = await fetch(url).then(res => res.text());
+            document.getElementById('pin-display').innerText = pin;
+            document.getElementById('pin-container').style.display = "block";
+            statusDiv.className = "success";
+            statusDiv.innerText = ">> SECURITY PIN DEPLOYED.";
+        } catch (err) {
+            statusDiv.className = "error";
+            statusDiv.innerText = ">> UPLINK FAILURE.";
+        }
     });
 
+    // ADMIN: Verification Logic
     function triggerAdminMode() {
         if (prompt("ENTER SYSTEM OVERRIDE:") === ADMIN_PASSWORD) {
             document.getElementById('customer-view').style.display = "none";
@@ -106,15 +121,19 @@
         }
     }
 
-    function verifyPin() {
-        const inputPin = document.getElementById('pin-input').value;
-        if (inputPin === activeOrder.pin) {
-            document.getElementById('display-name').innerText = `${activeOrder.nName} (${activeOrder.rName})`;
-            document.getElementById('display-user').innerText = activeOrder.uName;
-            document.getElementById('display-item').innerText = activeOrder.item;
+    async function verifyPin() {
+        const pin = document.getElementById('pin-input').value;
+        const res = await fetch(`${GOOGLE_WEB_URL}?action=verifyPin&pin=${pin}`);
+        const data = await res.json();
+
+        if (data.uName) {
+            document.getElementById('display-name').innerText = data.rName;
+            document.getElementById('display-nickname').innerText = data.nName;
+            document.getElementById('display-user').innerText = data.uName;
+            document.getElementById('display-item').innerText = data.item;
             document.getElementById('order-details').style.display = "block";
         } else {
-            alert("Invalid PIN.");
+            alert("PIN invalid or already processed.");
         }
     }
 
